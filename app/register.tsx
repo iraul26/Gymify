@@ -5,9 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 export default function Register() {
+  //router for navigation
   const router = useRouter();
 
-  //input states
+  //input variable states
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function Register() {
     isAgreed?: string;
   }>({});
 
-  //validation function
+  //validation method to validate all fields
   const validateForm = () => {
     const newErrors: typeof errors = {};
 
@@ -71,13 +72,15 @@ export default function Register() {
       newErrors.isAgreed = "Must accept the terms and conditions to continue";
     }
 
+    //set errors in state
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  //register handler
+  //registration handler method
   const handleRegister = () => {
     if (validateForm()) {
+      //clear the input fields on success
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -85,12 +88,14 @@ export default function Register() {
       setPassword("");
       setConfirmPassword("");
       setIsAgreed(false);
+      //show success alert and navigate to home page
       Alert.alert("Success", "You have successfully registered!");
       router.replace("/(tabs)/home");
     }
   };
 
   return (
+    //dismiss keyboard when tapping outside the input fields
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         {/* back Arrow */}

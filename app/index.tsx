@@ -3,11 +3,16 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Image, Keyboard, Toucha
 import { useRouter } from 'expo-router';
 
 export default function Login() {
+  //router hook for navigation
   const router = useRouter();
+
+  //state variables for input fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  //method that will handle login validation and navigation
   const handleLogin = () => {
+    //if username or password is empty, display an alert message
     if (!username.trim() || !password.trim()) {
       Alert.alert('Validation Error', 'Username and password cannot be empty!');
     } else {
@@ -17,6 +22,7 @@ export default function Login() {
   };
 
   return (
+    //touchable without feedback is used when tapping outside of fields to dismiss keyboard
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: "#121212", paddingBottom: 200 }}>
       {/* heading */}
@@ -31,12 +37,7 @@ export default function Login() {
       <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: "#F7F6F5" }}>Login</Text>
 
       {/* username input */}
-      <TextInput 
-        placeholder="Username"
-        placeholderTextColor="#999" 
-        value={username} 
-        onChangeText={setUsername} 
-        style={{
+      <TextInput placeholder="Username" placeholderTextColor="#999" value={username} onChangeText={setUsername} style={{
           width: '100%',
           borderWidth: 1,
           borderColor: '#ccc',
@@ -48,13 +49,7 @@ export default function Login() {
       />
 
       {/* password input */}
-      <TextInput 
-      placeholder="Password"
-      placeholderTextColor="#999" 
-      value={password} 
-      onChangeText={setPassword} 
-      secureTextEntry 
-      style={{
+      <TextInput placeholder="Password" placeholderTextColor="#999" value={password} onChangeText={setPassword} secureTextEntry style={{
           width: '100%',
           borderWidth: 1,
           borderColor: '#ccc',
@@ -72,8 +67,7 @@ export default function Login() {
           borderRadius: 8,
           alignItems: 'center',
           width: '100%',
-        }}
-      >
+        }}>
         <Text style={{ color: '#fff', fontWeight: 'bold' }}>Login</Text>
       </TouchableOpacity>
 
