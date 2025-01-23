@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
 import { Checkbox } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { collection, addDoc, query, where, getDocs} from "firebase/firestore";
+import db from "../firebaseConfig";
+import bcrypt from "react-native-bcrypt";
 
 export default function Register() {
   //router for navigation
@@ -27,6 +30,9 @@ export default function Register() {
     confirmPassword?: string;
     isAgreed?: string;
   }>({});
+
+  //loading for registering a user
+  const [isLoading, setIsLoading] = useState(false);
 
   //validation method to validate all fields
   const validateForm = () => {
@@ -78,21 +84,68 @@ export default function Register() {
   };
 
   //registration handler method
-  const handleRegister = () => {
-    if (validateForm()) {
-      //clear the input fields on success
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setUsername("");
-      setPassword("");
-      setConfirmPassword("");
-      setIsAgreed(false);
-      //show success alert and navigate to home page
-      Alert.alert("Success", "You have successfully registered!");
-      router.replace("/(tabs)/home");
-    }
+  const handleRegister = async () => {
+    setIsLoading(true); //set loading immediately
+    setTimeout(async () => { //delay the validation and registration logic
+      try {
+        if (validateForm()) {
+          //query db for matching email or username
+          const usersRef = collection(db, "users");
+          const emailQuery = query(usersRef, where("email", "==", email));
+          const usernameQuery = query(usersRef, where("username", "==", username));
+    
+          const emailSnapshot = await getDocs(emailQuery);
+          const usernameSnapshot = await getDocs(usernameQuery);
+    
+          //check if email or username already exists
+          if (!emailSnapshot.empty) {
+            Alert.alert("Error", "The email is already in use.");
+            setIsLoading(false);
+            return;
+          }
+          if (!usernameSnapshot.empty) {
+            Alert.alert("Error", "The username is already in use.");
+            setIsLoading(false);
+            return;
+          }
+    
+          //encrypt user password
+          const salt = bcrypt.genSaltSync(10);
+          const encryptedPassword = bcrypt.hashSync(password, salt);
+    
+          //add user data to the db
+          await addDoc(usersRef, {
+            email,
+            firstName,
+            lastName,
+            password: encryptedPassword,
+            profilePicture: "", //default
+            username,
+          });
+    
+          //clear input fields on success
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
+          setIsAgreed(false);
+    
+          //navigate to success screen
+          router.replace("/successScreen");
+        }
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        Alert.alert("Error", "Failed to register. Please try again.");
+      } finally {
+        setIsLoading(false); //stop loading spinner
+      }
+    }, 0); //delay by 0ms to render
   };
+  
+  
+  
 
   return (
     //dismiss keyboard when tapping outside the input fields
@@ -157,9 +210,14 @@ export default function Register() {
           {errors.isAgreed && <Text style={styles.errorText}>{errors.isAgreed}</Text>}
         </View>
 
-        {/* register Button */}
-        <TouchableOpacity onPress={handleRegister} style={styles.registerButton}>
-          <Text style={{ color: "#121212", fontWeight: "bold", fontSize: 16 }}>Register</Text>
+        {/* spinner or register Button */}
+        {isLoading && (
+          <View style={styles.spinnerOverlay}>
+            <ActivityIndicator size="large" color="#BB86FC" />
+          </View>
+        )}
+        <TouchableOpacity onPress={handleRegister} disabled={isLoading} style={[styles.registerButton, isLoading && { backgroundColor: "#666" }]}>
+          <Text style={{ color: isLoading ? "#999" : "#121212", fontWeight: "bold", fontSize: 16 }}>Register</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
@@ -229,4 +287,13 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 10,
   },
+  spinnerOverlay: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  }
 });

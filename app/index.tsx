@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import bcrypt from 'react-native-bcrypt';
+import db from '@/firebaseConfig';
 
 export default function Login() {
   //router hook for navigation
@@ -9,15 +12,48 @@ export default function Login() {
   //state variables for input fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   //method that will handle login validation and navigation
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    //start the spinner
+    setIsLoading(true);
+
     //if username or password is empty, display an alert message
     if (!username.trim() || !password.trim()) {
+      setIsLoading(false);
       Alert.alert('Validation Error', 'Username and password cannot be empty!');
-    } else {
-      //navigate to the tabs screen
-      router.replace("/(tabs)/home");
+      return;
+    }
+
+    try {
+      //query the database to find a user with the entered username
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('username', '==', username));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        setIsLoading(false);
+        Alert.alert('Invalid Login', 'Invalid username and/or password. Please try again.');
+        return;
+      }
+
+      //retrieve user data and check the password
+      const userData = querySnapshot.docs[0].data();
+      const passwordMatch = bcrypt.compareSync(password, userData.password);
+
+      if (passwordMatch) {
+        //navigate to the home screen if login is successful
+        router.replace('/(tabs)/home');
+      } else {
+        Alert.alert('Invalid Login', 'Invalid username and/or password. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again later.');
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,16 +96,20 @@ export default function Login() {
         }}
       />
       
-      {/* login button */}
-      <TouchableOpacity onPress={handleLogin} style={{
-          backgroundColor: '#007BFF',
-          padding: 12,
-          borderRadius: 8,
-          alignItems: 'center',
-          width: '100%',
-        }}>
-        <Text style={{ color: '#fff', fontWeight: 'bold' }}>Login</Text>
-      </TouchableOpacity>
+      {/* login button or spinner */}
+      {isLoading ? (
+          <ActivityIndicator size="large" color="#007BFF" />
+        ) : (
+          <TouchableOpacity onPress={handleLogin} style={{
+              backgroundColor: '#007BFF',
+              padding: 12,
+              borderRadius: 8,
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Login</Text>
+          </TouchableOpacity>
+        )}
 
       {/* register link */}
       <TouchableOpacity onPress={() => router.push("/register")}>
