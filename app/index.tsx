@@ -8,7 +8,6 @@ import db from '@/firebaseConfig';
 export default function Login() {
   //router hook for navigation
   const router = useRouter();
-
   //state variables for input fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
