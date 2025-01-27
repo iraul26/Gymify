@@ -21,7 +21,7 @@ export default function Login() {
     //if username or password is empty, display an alert message
     if (!username.trim() || !password.trim()) {
       setIsLoading(false);
-      Alert.alert('Validation Error', 'Username and password cannot be empty!');
+      Alert.alert('Username and/or password cannot be empty!');
       return;
     }
 
