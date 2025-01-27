@@ -3,20 +3,20 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Image, Keyboard, Toucha
 import { useRouter } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
 
-export default function termsAndConditons() {
+export default function termsAndConditions() {
 
     //router to route back to previous screen
     const router = useRouter();
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        {/* back Arrow */}
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Text>Terms and conditions mock page for now</Text>
-        </View>
+            <View style={styles.container}>
+                {/* back Arrow */}
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
+                 </TouchableOpacity>
+                 <Text style={{ color: "#fff", fontSize: 14, paddingTop: 10 }}>Terms and conditions mock page for now</Text>
+            </View>
         </TouchableWithoutFeedback>
     );
 }
