@@ -86,62 +86,60 @@ export default function Register() {
   //registration handler method
   const handleRegister = async () => {
     setIsLoading(true); //set loading immediately
-    setTimeout(async () => { //delay the validation and registration logic
-      try {
-        if (validateForm()) {
-          //query db for matching email or username
-          const usersRef = collection(db, "users");
-          const emailQuery = query(usersRef, where("email", "==", email));
-          const usernameQuery = query(usersRef, where("username", "==", username));
-    
-          const emailSnapshot = await getDocs(emailQuery);
-          const usernameSnapshot = await getDocs(usernameQuery);
-    
-          //check if email or username already exists
-          if (!emailSnapshot.empty) {
-            Alert.alert("Error", "The email is already in use.");
-            setIsLoading(false);
-            return;
-          }
-          if (!usernameSnapshot.empty) {
-            Alert.alert("Error", "The username is already in use.");
-            setIsLoading(false);
-            return;
-          }
-    
-          //encrypt user password
-          const salt = bcrypt.genSaltSync(10);
-          const encryptedPassword = bcrypt.hashSync(password, salt);
-    
-          //add user data to the db
-          await addDoc(usersRef, {
-            email,
-            firstName,
-            lastName,
-            password: encryptedPassword,
-            profilePicture: "", //default
-            username,
-          });
-    
-          //clear input fields on success
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setUsername("");
-          setPassword("");
-          setConfirmPassword("");
-          setIsAgreed(false);
-    
-          //navigate to success screen
-          router.replace("/successScreen");
+    try {
+      if (validateForm()) {
+        //query db for matching email or username
+        const usersRef = collection(db, "users");
+        const emailQuery = query(usersRef, where("email", "==", email));
+        const usernameQuery = query(usersRef, where("username", "==", username));
+  
+        const emailSnapshot = await getDocs(emailQuery);
+        const usernameSnapshot = await getDocs(usernameQuery);
+  
+        //check if email or username already exists
+        if (!emailSnapshot.empty) {
+          Alert.alert("Error", "The email is already in use.");
+          setIsLoading(false);
+          return;
         }
-      } catch (error) {
-        console.error("Error adding document: ", error);
-        Alert.alert("Error", "Failed to register. Please try again.");
-      } finally {
-        setIsLoading(false); //stop loading spinner
+        if (!usernameSnapshot.empty) {
+          Alert.alert("Error", "The username is already in use.");
+          setIsLoading(false);
+          return;
+        }
+  
+        //encrypt user password
+        const salt = bcrypt.genSaltSync(10);
+        const encryptedPassword = bcrypt.hashSync(password, salt);
+  
+        //add user data to the db
+        await addDoc(usersRef, {
+          email,
+          firstName,
+          lastName,
+          password: encryptedPassword,
+          profilePicture: "", //default
+          username,
+        });
+  
+        //clear input fields on success
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+        setConfirmPassword("");
+        setIsAgreed(false);
+  
+        //navigate to success screen
+        router.replace("/successScreen");
       }
-    }, 0); //delay by 0ms to render
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      Alert.alert("Error", "Failed to register. Please try again.");
+    } finally {
+      setIsLoading(false); //stop loading spinner
+    }
   };
   
   
