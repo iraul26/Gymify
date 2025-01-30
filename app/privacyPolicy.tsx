@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-nati
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function privacyPolicy() {
+export default function PrivacyPolicy() {
   const router = useRouter();
 
   return (
