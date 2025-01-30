@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
-import { Checkbox } from "native-base";
+import { Checkbox, Flex } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { collection, addDoc, query, where, getDocs} from "firebase/firestore";
@@ -33,6 +33,14 @@ export default function Register() {
 
   //loading for registering a user
   const [isLoading, setIsLoading] = useState(false);
+
+  //password visibility states
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  //toggle password visibility
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
   //validation method to validate all fields
   const validateForm = () => {
@@ -187,7 +195,12 @@ export default function Register() {
           {/* password */}
           <View style={styles.inputContainer}>
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-            <TextInput placeholder="Password" placeholderTextColor="#A1A1A1" value={password} onChangeText={setPassword} secureTextEntry style={styles.inputField}/>
+            <View style={styles.passwordContainer}>
+              <TextInput placeholder="Password" placeholderTextColor="#A1A1A1" value={password} onChangeText={setPassword} secureTextEntry={!showPassword} style={[styles.inputField, {flex: 1 }]}/>
+              <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
+                <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="#A1A1A1" />
+              </TouchableOpacity>
+              </View>
           </View>
 
           {/* confirm password */}
@@ -195,7 +208,12 @@ export default function Register() {
             {errors.confirmPassword && (
               <Text style={styles.errorText}>{errors.confirmPassword}</Text>
             )}
-            <TextInput placeholder="Confirm Password" placeholderTextColor="#A1A1A1" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry style={styles.inputField}/>
+            <View style={styles.passwordContainer}>
+              <TextInput placeholder="Confirm Password" placeholderTextColor="#A1A1A1" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry={!showConfirmPassword} style={[styles.inputField, {flex: 1}]}/>
+              <TouchableOpacity onPress={toggleConfirmPasswordVisibility} style={styles.eyeIcon}>
+                <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={24} color="#A1A1A1" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* checkbox */}
@@ -222,6 +240,7 @@ export default function Register() {
   );
 }
 
+//styling for form
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -229,31 +248,31 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 40,
+    paddingBottom: 40
   },
   backButton: {
     position: "absolute",
     top: 50,
     left: 16,
-    zIndex: 1,
+    zIndex: 1
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#FFFFFF",
-    marginBottom: 10,
+    marginBottom: 10
   },
   subtitle: {
     color: "#A1A1A1",
-    marginBottom: 20,
+    marginBottom: 20
   },
   form: {
-    width: "100%",
+    width: "100%"
   },
   inputContainer: {
     marginBottom: 10,
     height: 72,
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   inputField: {
     width: "100%",
@@ -262,20 +281,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#1E1E1E",
     color: "#FFFFFF",
     borderRadius: 8,
-    padding: 12,
+    padding: 12
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#333333",
+    backgroundColor: "#1E1E1E",
+    borderRadius: 8
+  },
+  eyeIcon: {
+    padding: 12
   },
   errorText: {
     color: "red",
-    fontSize: 12,
+    fontSize: 12
   },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 10
   },
   checkboxText: {
     color: "#FFFFFF",
-    marginLeft: 10,
+    marginLeft: 10
   },
   registerButton: {
     backgroundColor: "#BB86FC",
@@ -283,7 +313,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     width: "100%",
-    marginTop: 10,
+    marginTop: 10
   },
   spinnerOverlay: {
     top: 0,
@@ -292,6 +322,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.5)"
   }
 });
