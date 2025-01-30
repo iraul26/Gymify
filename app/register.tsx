@@ -220,7 +220,7 @@ export default function Register() {
           <View style={styles.checkboxContainer}>
             <Checkbox value="agreeTerms" isChecked={isAgreed} onChange={() => setIsAgreed(!isAgreed)} aria-label="agreeTerms"/>
             <Text style={styles.checkboxText}>I agree with the{" "}
-              <Text onPress={() => router.replace("/termsAndConditions")} style={{ fontWeight: "bold", color: "#BB86FC" }}>Terms and Conditions</Text>
+              <Text onPress={() => router.push("termsAndConditions")} style={{ fontWeight: "bold", color: "#BB86FC" }}>Terms and Conditions</Text>
             </Text>
           </View>
           {errors.isAgreed && <Text style={styles.errorText}>{errors.isAgreed}</Text>}

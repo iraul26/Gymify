@@ -11,6 +11,7 @@ export default function RootLayout() {
         <Stack.Screen name="termsAndConditions" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="profilePicture" options={{ headerShown: false }} />
+        <Stack.Screen name="privacyPolicy" options={{ headerShown: false}} />
       </Stack>
     </NativeBaseProvider>
   );

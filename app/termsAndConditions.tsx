@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { color } from "native-base/lib/typescript/theme/styled-system";
 
 export default function TermsAndConditions() {
   const router = useRouter();
@@ -30,9 +31,7 @@ export default function TermsAndConditions() {
         </Text>
 
         <Text style={styles.sectionTitle}>2. Privacy Policy</Text>
-        <Text style={styles.text}>
-          Your use of Gymify is also governed by our Privacy Policy, which explains how we collect, use, and protect your data. Please review our Privacy Policy [here].
-        </Text>
+        <Text style={styles.text}> Your use of Gymify is also governed by our Privacy Policy, which explains how we collect, use, and protect your data. Please review our <Text style={{color: "#A020F0"}} onPress={() => router.push("privacyPolicy")}>privacy policy here</Text></Text>
 
         <Text style={styles.sectionTitle}>3. Intellectual Property</Text>
         <Text style={styles.text}>
