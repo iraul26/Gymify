@@ -9,7 +9,7 @@ const SuccessScreen = () => {
   useEffect(() => {
     //redirect to home after 3 seconds
     const timeout = setTimeout(() => {
-      router.replace("/(tabs)/home");
+      router.replace("/");
     }, 3000);
 
     return () => clearTimeout(timeout); //clear timeout if component unmounts
