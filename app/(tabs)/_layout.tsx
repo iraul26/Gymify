@@ -5,7 +5,7 @@ import React from 'react';
 export default function TabLayout() {
   return (
     <Tabs
-      screenOptions={{ tabBarStyle: { backgroundColor: "#121212" }, tabBarInactiveTintColor: "#888"}}>
+      screenOptions={{ tabBarStyle: { backgroundColor: "#121212" }, tabBarInactiveTintColor: "#888", headerStyle: { backgroundColor: "#121212" }, headerTintColor: "#fff"}}>
 
       {/* workout tab */}
       <Tabs.Screen name="workout" options={{ title: "Workout", tabBarIcon: ({ focused }) => ( <Image source={require("../../assets/images/dumbell.png")} style={{ width: 30,  height: 30}}/>)}}/>
