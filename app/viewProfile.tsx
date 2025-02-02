@@ -9,13 +9,16 @@ import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function ViewProfile() {
-  const router = useRouter();
-  const { userId } = useUser();
-  const [userData, setUserData] = useState<DocumentData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const router = useRouter(); //hook for navigation
+  const { userId } = useUser(); //get user id from the context
 
+  //state variables
+  const [userData, setUserData] = useState<DocumentData | null>(null); //store user data
+  const [loading, setLoading] = useState(true); //loading state
+  const [isDarkMode, setIsDarkMode] = useState(true); //theme toggle
+  const [profilePicture, setProfilePicture] = useState<string | null>(null); //profile picture url
+
+  //runs when user id changes
   useEffect(() => {
     if (userId) {
       fetchUserData();
@@ -25,7 +28,9 @@ export default function ViewProfile() {
     }
   }, [userId]);
 
-  //fetch user data from db
+  /**
+   * fetches user data from db
+   */
   const fetchUserData = async () => {
     try {
       const userRef = doc(db, "users", String(userId));
@@ -33,7 +38,7 @@ export default function ViewProfile() {
 
       if (userSnap.exists()) {
         setUserData(userSnap.data());
-        setProfilePicture(userSnap.data()?.profilePicture || null);
+        setProfilePicture(userSnap.data()?.profilePicture || null); //set profile picture if available
       } else {
         console.error("User not found");
       }
@@ -44,7 +49,10 @@ export default function ViewProfile() {
     }
   };
 
-  //choose an image
+  /**
+   * opens the device gallery for image selection
+   * @returns
+   */
   const selectImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
@@ -54,11 +62,14 @@ export default function ViewProfile() {
 
     const result = await ImagePicker.launchImageLibraryAsync({ base64: true, allowsEditing: true });
     if (!result.canceled) {
-      handleImageUpload(result.assets[0].uri);
+      handleImageUpload(result.assets[0].uri); //upload selected image
     }
   };
 
-  //method to take a photo
+  /**
+   * opens the device camera to take a photo
+   * @returns 
+   */
   const takePhoto = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (!permission.granted) {
@@ -68,25 +79,32 @@ export default function ViewProfile() {
 
     const result = await ImagePicker.launchCameraAsync({ base64: true, allowsEditing: true });
     if (!result.canceled) {
-      handleImageUpload(result.assets[0].uri);
+      handleImageUpload(result.assets[0].uri); //upload the photo taken
     }
   };
 
-  //method to upload the image to database
+  /**
+   * uploads the selected or taken image to the db
+   * @param imageUri the local uri of the selected image
+   */
   const handleImageUpload = async (imageUri: string) => {
     try {
+      //convert image to blob format for firestore
       const response = await fetch(imageUri);
       const blob = await response.blob();
 
+      //reference for storage location
       const storageRef = ref(storage, `profilePictures/${userId}.jpg`);
       
+      //upload image to storage
       await uploadBytes(storageRef, blob, { contentType: "image/jpeg" });
       const downloadURL = await getDownloadURL(storageRef);
 
-      // Update the profile picture in Firestore
+      //update the profile picture in db
       const userRef = doc(db, "users", String(userId));
       await updateDoc(userRef, { profilePicture: downloadURL });
 
+      //set new profile picture
       setProfilePicture(downloadURL);
       Alert.alert("Success", "Profile picture updated!");
     } catch (error) {
@@ -95,6 +113,7 @@ export default function ViewProfile() {
     }
   };
 
+  //show loading spinner while fetching user data
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -113,7 +132,7 @@ export default function ViewProfile() {
       {/* title */}
       <Text style={[styles.title, isDarkMode ? styles.darkText : styles.lightText]}>View Profile</Text>
 
-      {/* Profile Picture */}
+      {/* profile picture */}
       <TouchableOpacity onPress={selectImage} style={styles.profilePictureContainer}>
         {profilePicture ? (
           <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
