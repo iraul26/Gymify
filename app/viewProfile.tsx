@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Switch } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Switch, Image, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { doc, DocumentData, getDoc } from "firebase/firestore";
-import db from "@/firebaseConfig";
+import { doc, DocumentData, getDoc, updateDoc } from "firebase/firestore";
+import { db, storage } from "@/firebaseConfig";
 import { useUser } from "./userContext";
+import * as ImagePicker from "expo-image-picker";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function ViewProfile() {
   const router = useRouter();
   const { userId } = useUser();
   const [userData, setUserData] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   useEffect(() => {
     if (userId) {
@@ -30,6 +33,7 @@ export default function ViewProfile() {
 
       if (userSnap.exists()) {
         setUserData(userSnap.data());
+        setProfilePicture(userSnap.data()?.profilePicture || null);
       } else {
         console.error("User not found");
       }
@@ -37,6 +41,57 @@ export default function ViewProfile() {
       console.error("Error fetching user data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  //choose an image
+  const selectImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Permission Denied", "Gallery access is required.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({ base64: true, allowsEditing: true });
+    if (!result.canceled) {
+      handleImageUpload(result.assets[0].uri);
+    }
+  };
+
+  //method to take a photo
+  const takePhoto = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Permission Denied", "Camera access is required.");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({ base64: true, allowsEditing: true });
+    if (!result.canceled) {
+      handleImageUpload(result.assets[0].uri);
+    }
+  };
+
+  //method to upload the image to database
+  const handleImageUpload = async (imageUri: string) => {
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      const storageRef = ref(storage, `profilePictures/${userId}.jpg`);
+      
+      await uploadBytes(storageRef, blob, { contentType: "image/jpeg" });
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Update the profile picture in Firestore
+      const userRef = doc(db, "users", String(userId));
+      await updateDoc(userRef, { profilePicture: downloadURL });
+
+      setProfilePicture(downloadURL);
+      Alert.alert("Success", "Profile picture updated!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Alert.alert("Error", "Failed to upload image.");
     }
   };
 
@@ -58,11 +113,38 @@ export default function ViewProfile() {
       {/* title */}
       <Text style={[styles.title, isDarkMode ? styles.darkText : styles.lightText]}>View Profile</Text>
 
+      {/* Profile Picture */}
+      <TouchableOpacity onPress={selectImage} style={styles.profilePictureContainer}>
+        {profilePicture ? (
+          <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
+        ) : (
+          <Ionicons name="person-circle-outline" size={100} color="#BB86FC" />
+        )}
+      </TouchableOpacity>
+
+      {/* upload or take photo buttons */}
+      <View style={styles.uploadContainer}>
+        <TouchableOpacity onPress={selectImage} style={styles.uploadButton}>
+          <Text style={styles.uploadText}>Choose Photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={takePhoto} style={styles.uploadButton}>
+          <Text style={styles.uploadText}>Take Photo</Text>
+        </TouchableOpacity>
+      </View>
+
+
       {/* user data */}
       <View style={styles.inputContainer}>
+        <Text style={styles.label}>First Name</Text>
         <TextInput value={userData?.firstName} editable={false} style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]} />
+
+        <Text style={styles.label}>Last Name</Text>
         <TextInput value={userData?.lastName} editable={false} style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]} />
+
+        <Text style={styles.label}>Username</Text>
         <TextInput value={userData?.username} editable={false} style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]} />
+
+        <Text style={styles.label}>Email Address</Text>
         <TextInput value={userData?.email} editable={false} style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]} />
       </View>
 
@@ -97,6 +179,32 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 100,
+  },
+  profilePictureContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "#BB86FC",
+  },
+  uploadContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    gap: 10,
+  },
+  uploadButton: {
+    backgroundColor: "#BB86FC",
+    padding: 10,
+    borderRadius: 8,
+  },
+  uploadText: {
+    color: "#121212",
+    fontWeight: "bold",
   },
   darkText: {
     color: "#FFF",
@@ -138,5 +246,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#121212",
   },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#BB86FC",
+    alignSelf: "flex-start",
+  }
 });
 

@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Image, Keyboard, Toucha
 import { useRouter } from 'expo-router';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import bcrypt from 'react-native-bcrypt';
-import db from '@/firebaseConfig';
+import { db } from '@/firebaseConfig';
 import { useUser } from './userContext';
 
 export default function Login() {
