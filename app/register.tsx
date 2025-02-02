@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Keyboard, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
-import { Checkbox, Flex } from "native-base";
+import { Checkbox} from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { collection, addDoc, query, where, getDocs} from "firebase/firestore";
-import db from "../firebaseConfig";
+import { db } from "../firebaseConfig";
 import bcrypt from "react-native-bcrypt";
 
 export default function Register() {
