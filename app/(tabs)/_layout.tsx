@@ -14,7 +14,7 @@ export default function TabLayout() {
       <Tabs.Screen name="home" options={{ title: "Meal Input", tabBarIcon: ({ focused }) => (<Image source={require("../../assets/images/mealInput.png")} style={{ width: 30, height: 30 }} />)}}/>
 
       {/* user tab */}
-      <Tabs.Screen name="user" options={{ title: "User", tabBarIcon: ({ focused }) => (<Image source={require("../../assets/images/user.png")} style={{ width: 30, height: 30 }} />)}}/>
+      <Tabs.Screen name="user" options={{ title: "Account", tabBarIcon: ({ focused }) => (<Image source={require("../../assets/images/user.png")} style={{ width: 30, height: 30 }} />)}}/>
 
     </Tabs>
   );

@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function Home() {
+  const { userId } = useLocalSearchParams();
+  console.log("user id received in home: ", userId);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Meal Input</Text>
