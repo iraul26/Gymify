@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { useUser } from '../userContext';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
+import { db } from '@/firebaseConfig';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
 
 const API_KEY = Constants.expoConfig?.extra?.usdaApiKey;
 
@@ -21,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   //fetch food data from usda api
   const searchFood = async () => {
@@ -52,6 +55,37 @@ export default function Home() {
     setShowResults(false); //hide the list
     setQuery(""); //clear search bar
     setSelectedFood(null);
+  };
+
+  //submit meal details to db
+  const submitMeal = async () => {
+    if(!selectedFood) {
+      Alert.alert("Error, No meal selected");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const mealData = {
+        mealName: selectedFood.description,
+        calories: selectedFood.foodNutrients.find(n => n.nutrientId === 1008)?.value || 0,
+        carbs: selectedFood.foodNutrients.find(n => n.nutrientId === 1005)?.value || 0,
+        fats: selectedFood.foodNutrients.find(n => n.nutrientId === 1004)?.value || 0,
+        protein: selectedFood.foodNutrients.find(n => n.nutrientId === 1003)?.value || 0,
+        date: Timestamp.now(),
+        userId: userId
+      };
+
+      await addDoc(collection(db, "meals"), mealData);
+      Alert.alert("Success, Meal submitted successfully");
+      clearResults();
+    }
+    catch(error) {
+      console.error("Error submitting meal ", error);
+      Alert.alert("Error submitting meal");
+    }
+    finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -91,6 +125,11 @@ export default function Home() {
           <Text style={styles.nutrients}>
             Protein: {selectedFood.foodNutrients.find(n => n.nutrientId === 1003)?.value || "N/A"} g
           </Text>
+
+          {/* submit button */}
+          <TouchableOpacity onPress={submitMeal} style={styles.submitButton} disabled={submitting}>
+            <Text style={styles.submitText}>{submitting ? "Submitting..." : "Submit Meal"}</Text>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -170,4 +209,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
+  submitButton: {
+    backgroundColor: "#BB86FC",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  submitText: {
+    color: "#121212",
+    fontWeight: "bold",
+    fontSize: 16,
+  }
 });
