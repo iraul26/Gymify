@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+# Gymify 💪
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Gymify is a fitness tracking app designed to help users log and track their workouts effortlessly. With Gymify, you can search for exercises, log your sets, reps, and weight, and view your workout history in an organized and intuitive way. Whether you're a beginner or a seasoned gym-goer, Gymify makes it easy to stay on top of your fitness goals.
 
-## Get started
 
-1. Install dependencies
+---
 
+## Features ✨
+
+- **Exercise Search**: Quickly search for exercises in your workout history.
+- **Log Workouts**: Log your sets, reps, and weight for each exercise.
+- **Workout History**: View a detailed history of your workouts, sorted by date.
+- **Dropdown Workout Details**: Expandable dropdowns for each exercise to view past workout data.
+- **Add New Exercises**: Easily add new exercises to your workout library.
+- **Responsive Design**: Built with React Native for a seamless mobile experience.
+
+---
+
+## Technologies Used 🛠️
+
+- **Frontend**: React Native, TypeScript
+- **State Management**: React Context API
+- **Backend**: Firebase Firestore (for real-time data storage), Node.JS
+- **Framework**: Expo
+- **Styling**: React Native StyleSheet
+- **Icons**: Expo Vector Icons
+
+---
+
+## Installation and Setup 🚀
+
+### Prerequisites
+- Node.js (v16 or higher)
+- Expo CLI (`npm install -g expo-cli`)
+- Firebase project with Firestore enabled
+
+### Steps
+1. **Clone the Repository**:
    ```bash
-   npm install
-   ```
+   git clone https://github.com/your-username/gymify.git
+   cd gymify
 
-2. Start the app
+   if you would like to run the app yourself and use it locally
+   1. create .env file in root of project with firebase api key, auth domain, project id, storage bucket, sender id, app id, and usda third party api key.
+   2. create app.config.js file in root of project that imports dotenv and has your firebaseConfig setup in the extra module
 
-   ```bash
-    npx expo start
-   ```
 
-In the output, you'll find options to open the app in a
+Usage 📱
+Search for Exercises:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Use the search bar to find exercises in your workout history.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Log a Workout:
 
-## Get a fresh project
+Select an exercise, enter your sets, reps, and weight, and log your workout.
 
-When you're ready, run:
+View Workout History:
 
-```bash
-npm run reset-project
-```
+Expand the dropdown for any exercise to see your past workout data.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Add New Exercises:
 
-## Learn more
+Click the "+" button to add a new exercise to your library.
 
-To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Contributing 🤝
+Contributions are welcome! If you'd like to contribute to Gymify, please follow these steps:
 
-## Join the community
+Fork the repository.
 
-Join our community of developers creating universal apps.
+Create a new branch (git checkout -b feature/your-feature-name).
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Commit your changes (git commit -m 'Add some feature').
+
+Push to the branch (git push origin feature/your-feature-name).
+
+Open a pull request.
+
+
