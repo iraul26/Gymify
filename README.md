@@ -21,6 +21,7 @@ Gymify is a fitness tracking app designed to help users log and track their work
 - **Frontend**: React Native, TypeScript
 - **State Management**: React Context API
 - **Backend**: Firebase Firestore (for real-time data storage), Node.JS
+- **Framework**: Expo
 - **Styling**: React Native StyleSheet
 - **Icons**: Expo Vector Icons
 
