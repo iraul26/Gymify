@@ -39,6 +39,10 @@ Gymify is a fitness tracking app designed to help users log and track their work
    git clone https://github.com/your-username/gymify.git
    cd gymify
 
+   if you would like to run the app yourself and use it locally
+   1. create .env file in root of project with firebase api key, auth domain, project id, storage bucket, sender id, app id, and usda third party api key.
+   2. create app.config.js file in root of project that imports dotenv and has your firebaseConfig setup in the extra module
+
 
 Usage 📱
 Search for Exercises:
