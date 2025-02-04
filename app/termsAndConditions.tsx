@@ -25,7 +25,7 @@ export default function TermsAndConditions() {
 
         <Text style={styles.sectionTitle}>1. User Responsibilities</Text>
         <Text style={styles.text}>
-          - You must be at least 13 years old to use Gymify.
+          - You must be at least 13 years old to use Gymify. If not, you may use Gymify services only with the involvement of a parent or guardian
           - You agree not to use the app for any illegal or unauthorized purpose.
           - You are responsible for maintaining the confidentiality of your account and password.
         </Text>
