@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
 import { Svg, Rect, Text as SvgText } from 'react-native-svg'; 
 import { useUser } from '../userContext';
+import ProfilePicture from '../components/profilePicture';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -208,7 +209,13 @@ export default function Home() {
   };
 
   return (
-    // modal when user clicks on the add button in search bar
+    <>
+    {/* profile picture at the top */}
+    <View style={styles.header}>
+      <ProfilePicture />
+    </View>
+
+    {/* modal when user clicks on the add button in search bar */}
     <ScrollView style={styles.scrollContainer}>
       <Modal
         animationType="slide"
@@ -489,11 +496,18 @@ export default function Home() {
         </View>
       </View>
     </ScrollView>
+    </>
   );  
 }
 
 //styles
 const styles = StyleSheet.create({
+  header: {
+    position: "absolute",
+    bottom: 830, //kept making value larger until the pfp was at top of screen
+    right: 16,
+    zIndex: 1000 //keeps it above other elements
+  },
   container: {
     flex: 1,
     backgroundColor: "#121212",

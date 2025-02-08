@@ -4,7 +4,7 @@ import { useUser } from "../userContext";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "@/firebaseConfig";
 import { collection, addDoc, query, where, getDocs, Timestamp, orderBy } from "firebase/firestore";
-import Dropdown from "../Dropdown";
+import Dropdown from "../components/Dropdown";
 
 export default function Workout() {
 
