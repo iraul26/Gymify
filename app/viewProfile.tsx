@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Switch, Image, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Switch, Image as RNImage, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { doc, DocumentData, getDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/firebaseConfig";
 import { useUser } from "./userContext";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function ViewProfile() {
@@ -89,6 +90,13 @@ export default function ViewProfile() {
    */
   const handleImageUpload = async (imageUri: string) => {
     try {
+      //compress the image to 1mb or less
+      const compressedImage = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [],
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
       //convert image to blob format for firestore
       const response = await fetch(imageUri);
       const blob = await response.blob();
@@ -135,7 +143,7 @@ export default function ViewProfile() {
       {/* profile picture */}
       <TouchableOpacity onPress={selectImage} style={styles.profilePictureContainer}>
         {profilePicture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profilePicture} />
+          <RNImage source={{ uri: profilePicture }} style={styles.profilePicture} />
         ) : (
           <Ionicons name="person-circle-outline" size={100} color="#BB86FC" />
         )}
