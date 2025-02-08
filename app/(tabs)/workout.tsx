@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Alert, FlatList, ActivityIndicator, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Alert, FlatList, ActivityIndicator, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { useUser } from "../userContext";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "@/firebaseConfig";
@@ -165,7 +165,9 @@ const handleLogWorkout = async () => {
 
 return (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
   <View style={styles.container}>
+
     {/* search bar */}
     <View style={styles.searchContainer}>
       <TextInput
@@ -283,6 +285,7 @@ return (
       </View>
     </Modal>
   </View>
+  </SafeAreaView>
   </TouchableWithoutFeedback>
 );
 }

@@ -210,11 +210,6 @@ export default function Home() {
 
   return (
     <>
-    {/* profile picture at the top */}
-    <View style={styles.header}>
-      <ProfilePicture />
-    </View>
-
     {/* modal when user clicks on the add button in search bar */}
     <ScrollView style={styles.scrollContainer}>
       <Modal
@@ -502,12 +497,6 @@ export default function Home() {
 
 //styles
 const styles = StyleSheet.create({
-  header: {
-    position: "absolute",
-    bottom: 830, //kept making value larger until the pfp was at top of screen
-    right: 16,
-    zIndex: 1000 //keeps it above other elements
-  },
   container: {
     flex: 1,
     backgroundColor: "#121212",
