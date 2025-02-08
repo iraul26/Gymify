@@ -83,7 +83,7 @@ export default function Register() {
 
     //terms and conditions validation
     if (!isAgreed) {
-      newErrors.isAgreed = "Must accept the terms and conditions to continue";
+      newErrors.isAgreed = "Must accept the terms and privacy policy to continue";
     }
 
     //set errors in state
@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
     borderColor: "#333333",
     backgroundColor: "#1E1E1E",
     borderRadius: 8
