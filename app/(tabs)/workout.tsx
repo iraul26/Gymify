@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Alert, FlatList, ActivityIndicator, Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, Alert, FlatList, ActivityIndicator, Keyboard, TouchableWithoutFeedback, SafeAreaView, ScrollView } from "react-native";
 import { useUser } from "../userContext";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "@/firebaseConfig";
@@ -166,7 +166,7 @@ const handleLogWorkout = async () => {
 return (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
-  <View style={styles.container}>
+  <ScrollView contentContainerStyle={styles.container}>
 
     {/* search bar */}
     <View style={styles.searchContainer}>
@@ -189,6 +189,9 @@ return (
         <Ionicons name="add-circle" size={28} color={"#BB86FC"} />
       </TouchableOpacity>
     </View>
+
+    {/* history header */}
+    <Text style={styles.historyHeader}>History</Text>
 
     {/* display search results */}
     {loading ? (
@@ -284,7 +287,7 @@ return (
         </View>
       </View>
     </Modal>
-  </View>
+  </ScrollView>
   </SafeAreaView>
   </TouchableWithoutFeedback>
 );
@@ -294,8 +297,16 @@ return (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexGrow: 1,
     padding: 16,
-    backgroundColor: "#121212",
+    backgroundColor: "black",
+  },
+  historyHeader: {
+    fontSize: 20,
+    color: "white",
+    marginTop: 10,
+    marginBottom: 5,
+    textAlign: "center"
   },
   loadingIndicator: {
     marginTop: 20,
@@ -313,14 +324,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+
     marginBottom: 10,
     padding: 10,
     color: "white",
-    backgroundColor: "#333",
+    backgroundColor: "#1E1E1E",
     borderRadius: 10,
-    borderWidth: 2,
     borderColor: "#555",
-    fontSize: 15, 
+    fontSize: 15,
   },
   clearButton: {
     padding: 10,

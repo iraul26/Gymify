@@ -75,7 +75,7 @@ export default function Login() {
   return (
     //touchable without feedback is used when tapping outside of fields to dismiss keyboard
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 16, backgroundColor: "#121212", paddingBottom: 200 }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 16, backgroundColor: "black", paddingBottom: 200 }}>
       {/* heading */}
       <Text style={{ fontSize: 32, fontWeight: "bold", marginBottom: 10, color: "#F7F6F5"}}>
         Gymify

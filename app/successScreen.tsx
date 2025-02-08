@@ -30,7 +30,7 @@ const SuccessScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     padding: 16,

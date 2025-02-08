@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableOpacity, Alert, ScrollView, Modal } from 'react-native';
 import { Svg, Rect, Text as SvgText } from 'react-native-svg'; 
 import { useUser } from '../userContext';
-import ProfilePicture from '../components/profilePicture';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -499,7 +498,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: "black",
     padding: 16,
   },
   title: {
@@ -521,10 +520,10 @@ const styles = StyleSheet.create({
   searchResultsContainer: {
     maxHeight: 350,
     borderWidth: 2,
-    borderColor: "#BB86FC",
+    borderColor: "gray",
     borderRadius: 20,
     marginTop: 5,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "black",
   },
   input: {
     flex: 1,
@@ -614,7 +613,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    backgroundColor: "#121212"
+    backgroundColor: "black"
   },
   addButton: {
     padding: 10,

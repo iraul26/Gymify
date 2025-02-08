@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { color } from "native-base/lib/typescript/theme/styled-system";
 
 export default function TermsAndConditions() {
   const router = useRouter();
@@ -70,7 +69,7 @@ export default function TermsAndConditions() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: "black",
     padding: 16
   },
   backButton: {

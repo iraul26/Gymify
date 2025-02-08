@@ -7,7 +7,7 @@ export default function TabLayout() {
   return (
     <Tabs
       //make the pfp on the headers of each tab
-      screenOptions={{ tabBarStyle: { backgroundColor: "#121212" }, tabBarInactiveTintColor: "#888", headerStyle: { backgroundColor: "#121212" }, headerTintColor: "#fff", headerRight: () => (<View style={styles.headerRight}><ProfilePicture /></View>),}}>
+      screenOptions={{ tabBarStyle: { backgroundColor: "black"}, tabBarInactiveTintColor: "#888", headerStyle: { backgroundColor: "black" }, headerTintColor: "#fff", headerRight: () => (<View style={styles.headerRight}><ProfilePicture /></View>),}}>
 
       {/* workout tab */}
       <Tabs.Screen name="workout" options={{ title: "Workout Log", tabBarIcon: ({ focused }) => ( <Image source={require("../../assets/images/dumbell.png")} style={{ width: 40,  height: 35}}/>)}}/>
@@ -24,7 +24,7 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   headerRight: {
-    bottom: 55,
+    bottom: 63,
     zIndex: 1001,
   }
 })

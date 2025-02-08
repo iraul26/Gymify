@@ -43,7 +43,7 @@ export default function User() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: "black",
     padding: 16,
   },
   section: {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "black",
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,

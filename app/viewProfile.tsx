@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   darkContainer: {
-    backgroundColor: "#121212",
+    backgroundColor: "black",
   },
   lightContainer: {
     backgroundColor: "#F5F5F5",
