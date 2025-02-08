@@ -93,12 +93,12 @@ export default function ViewProfile() {
       //compress the image to 1mb or less
       const compressedImage = await ImageManipulator.manipulateAsync(
         imageUri,
-        [],
-        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+        [{ resize: { width: 512, height: 512 }}],
+        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
       );
 
       //convert image to blob format for firestore
-      const response = await fetch(imageUri);
+      const response = await fetch(compressedImage.uri);
       const blob = await response.blob();
 
       //reference for storage location
