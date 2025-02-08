@@ -1,8 +1,18 @@
 import { NativeBaseProvider } from 'native-base';
 import { Stack } from 'expo-router';
 import { UserProvider } from './userContext';
+import * as ScreenOrientation from "expo-screen-orientation";
+import { useEffect } from 'react';
 
 export default function RootLayout() {
+  //lock the app in portrait mode
+  useEffect(() => {
+    const lockOrientation = async () => {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+    lockOrientation();
+  }, []);
+  
   return (
     <UserProvider>
       <NativeBaseProvider>
