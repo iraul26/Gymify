@@ -37,7 +37,7 @@ Gymify is a fitness tracking app designed to help users log and track their work
 ### Steps
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/gymify.git
+   git clone https://github.com/iraul26/gymify.git
    cd gymify
 
    if you would like to run the app yourself and use it locally
