@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { useRouter } from "expo-router";
 
 //define context type
 interface UserContextType {
@@ -8,6 +9,9 @@ interface UserContextType {
   setUserId: (id: string | null) => void;
   isDarkMode: boolean;
   toggleTheme: () => void;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (state: boolean) => void;
+  logout: () => void;
 }
 
 //create context
@@ -17,11 +21,17 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true); //default to dark mode
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   //fetch them when user logs in
   useEffect(() => {
     if(userId) {
       fetchUserTheme();
+      setIsLoggedIn(true); //set user as logged in when they have a userId
+    }
+    else {
+      setIsLoggedIn(false); //user is not logged in
     }
   }, [userId]);
 
@@ -61,8 +71,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  /**
+   * logout method when user logs out
+   */
+  const logout = () => {
+    setUserId(null);
+    setIsLoggedIn(false);
+    router.push("/"); //redirect to login page
+  }
+
   return (
-    <UserContext.Provider value={{ userId, setUserId, isDarkMode, toggleTheme }}>
+    <UserContext.Provider value={{ userId, setUserId, isDarkMode, toggleTheme, isLoggedIn, setIsLoggedIn, logout }}>
       {children}
     </UserContext.Provider>
   );

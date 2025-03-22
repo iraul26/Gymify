@@ -10,7 +10,7 @@ export default function Login() {
   //router hook for navigation
   const router = useRouter();
   //user context
-  const { setUserId } = useUser();
+  const { setUserId, setIsLoggedIn } = useUser(); //get methods from context
   //state variables for input fields
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +54,9 @@ export default function Login() {
 
         //store userId in context
         setUserId(userId);
+
+        //make user logged in state to true
+        setIsLoggedIn(true);
 
         //navigate to the home screen if login is successful
         router.replace({

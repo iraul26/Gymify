@@ -6,7 +6,7 @@ import { useUser } from "../userContext";
 
 export default function User() {
   const router = useRouter();
-  const { userId, isDarkMode } = useUser(); //get user id and theme
+  const { userId, isDarkMode, logout } = useUser(); //get user context
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkMode : styles.lightMode]}>
@@ -33,7 +33,7 @@ export default function User() {
       </View>
 
       {/* logout button */}
-      <TouchableOpacity style={[styles.logoutButton, isDarkMode ? styles.darkLogout : styles.lightLogout]}>
+      <TouchableOpacity onPress={logout} style={[styles.logoutButton, isDarkMode ? styles.darkLogout : styles.lightLogout]}>
         <Text style={[styles.logoutText, isDarkMode ? styles.lightText : styles.darkText]}>Logout</Text>
       </TouchableOpacity>
     </View>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   darkLogout: {
-    backgroundColor: "#BB86FC",
+    backgroundColor: "red",
   },
   lightLogout: {
     backgroundColor: "#6200EE",
