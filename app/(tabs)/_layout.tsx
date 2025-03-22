@@ -2,12 +2,14 @@ import { Tabs } from 'expo-router';
 import { Image, View, StyleSheet } from 'react-native';
 import React from 'react';
 import ProfilePicture from '../components/profilePicture';
-
+import { useUser } from "../userContext";
 export default function TabLayout() {
+  const { isDarkMode } = useUser();
+
   return (
     <Tabs
       //make the pfp on the headers of each tab
-      screenOptions={{ tabBarStyle: { backgroundColor: "black"}, tabBarInactiveTintColor: "#888", headerStyle: { backgroundColor: "black" }, headerTintColor: "#fff", headerRight: () => (<View style={styles.headerRight}><ProfilePicture /></View>),}}>
+      screenOptions={{ tabBarStyle: { backgroundColor: isDarkMode ? "black" : "white", borderTopColor: isDarkMode ? "#333" : "#ddd"}, tabBarInactiveTintColor: isDarkMode ? "#888" : "#555", headerStyle: { backgroundColor: isDarkMode ? "black" : "white" }, headerTintColor: isDarkMode ? "#fff" : "#000", headerRight: () => (<View style={styles.headerRight}><ProfilePicture /></View>),}}>
 
       {/* workout tab */}
       <Tabs.Screen name="workout" options={{ title: "Workout Log", tabBarIcon: ({ focused }) => ( <Image source={require("../../assets/images/dumbell.png")} style={{ width: 40,  height: 35}}/>)}}/>
