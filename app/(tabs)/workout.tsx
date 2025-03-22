@@ -8,7 +8,7 @@ import Dropdown from "../components/Dropdown";
 
 export default function Workout() {
 
-  const { userId } = useUser(); //get the userid from logged in user
+  const { userId, isDarkMode } = useUser(); //get the userid and theme from logged in user
 
   //state for workout search
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +23,7 @@ export default function Workout() {
 
   //state for selected exercise and details
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+  const [expandedWorkout, setExpandedWorkout] = useState<string | null>(null);
   const [workoutData, setWorkoutData] = useState({
     sets: "",
     reps: "",
@@ -163,17 +164,21 @@ const handleLogWorkout = async () => {
   }
 };
 
+const toggleDropdown = (exercise: string) => {
+  setExpandedWorkout(expandedWorkout === exercise ? null : exercise);
+};
+
 return (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <SafeAreaView style={{flex: 1, backgroundColor: "#121212"}}>
-  <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={[styles.container, isDarkMode? styles.darkMode : styles.lightMode]}>
+  <ScrollView contentContainerStyle={styles.innerContainer}>
 
     {/* search bar */}
-    <View style={styles.searchContainer}>
+    <View style={[styles.searchContainer, isDarkMode? styles.darkSearch : styles.lightSearch]}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, isDarkMode ? styles.darkText : styles.lightText]}
         placeholder="Search for an exercise"
-        placeholderTextColor="#999"
+        placeholderTextColor={isDarkMode ? "#999" : "#666"}
         value={searchQuery}
         onChangeText={handleSearch}
       />
@@ -186,25 +191,22 @@ return (
 
       {/* add exercise button */}
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.addButton}>
-        <Ionicons name="add-circle" size={28} color={"#BB86FC"} />
+        <Ionicons name="add-circle" size={28} color={"green"} />
       </TouchableOpacity>
     </View>
-
-    {/* history header */}
-    <Text style={styles.historyHeader}>History</Text>
 
     {/* display search results */}
     {loading ? (
       <ActivityIndicator size="large" color="#BB86FC" style={styles.loadingIndicator} />
     ) : (
       showResults && (
-        <View style={styles.searchResultsContainer}>
+        <View style={[styles.searchResultsContainer, isDarkMode ? styles.darkSearchResults : styles.lightSearchResults]}>
           <FlatList
             data={filteredExercises}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.exerciseItem} onPress={() => selectExercise(item)}>
-                <Text style={styles.exerciseName}>{item}</Text>
+              <TouchableOpacity style={[styles.exerciseItem, isDarkMode ? styles.darkExerciseItem : styles.lightExerciseItem]} onPress={() => selectExercise(item)}>
+                <Text style={[styles.exerciseName, isDarkMode ? styles.darkText : styles.lightText]}>{item}</Text>
               </TouchableOpacity>
             )}
             nestedScrollEnabled={true}
@@ -215,78 +217,116 @@ return (
 
     {/* display selected exercise form */}
     {selectedExercise && (
-      <View style={styles.selectedExerciseContainer}>
-        <Text style={styles.selectedExerciseTitle}>Log Workout</Text>
-        <Text style={styles.selectedExerciseName}>{selectedExercise}</Text>
+      <View style={[styles.selectedExerciseContainer, isDarkMode ? styles.darkContainer : styles.lightContainer]}>
+        <Text style={[styles.selectedExerciseName, isDarkMode ? styles.darkText : styles.lightText]}>{selectedExercise}</Text>
 
         {/* input fields */}
         <TextInput
-          style={styles.input}
+          style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
           placeholder="Sets"
-          placeholderTextColor="#999"
+          placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
           keyboardType="numeric"
           value={workoutData.sets}
           onChangeText={(text) => setWorkoutData({ ...workoutData, sets: text })}
         />
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
           placeholder="Reps per Set"
-          placeholderTextColor="#999"
+          placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
           keyboardType="numeric"
           value={workoutData.reps}
           onChangeText={(text) => setWorkoutData({ ...workoutData, reps: text })}
         />
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, isDarkMode ? styles.darkInput : styles.lightInput]}
           placeholder="Weight"
-          placeholderTextColor="#999"
+          placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+
           keyboardType="numeric"
           value={workoutData.weight}
           onChangeText={(text) => setWorkoutData({ ...workoutData, weight: text })}
         />
 
         {/* submit workout button */}
-        <TouchableOpacity onPress={handleLogWorkout} style={styles.completeWorkoutButton}>
-          <Text style={styles.completeWorkoutText}>Complete Workout</Text>
+        <TouchableOpacity onPress={handleLogWorkout} style={[styles.completeWorkoutButton, isDarkMode ? styles.darkButton : styles.lightButton]}>
+          <Text style={[styles.completeWorkoutText, isDarkMode ? styles.lightText : styles.darkText]}>Complete Workout</Text>
         </TouchableOpacity>
       </View>
     )}
 
-    {/* display dropdowns for each exercise */}
-    {exerciseList.map((exercise) => (
-          <Dropdown
-            key={exercise}
-            title={exercise}
-            data={workoutHistory[exercise] || []}
-          />
-        ))}
-
-    {/* modal for adding workouts */}
+   {/* modal for adding workouts */}
     <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
       <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Add Exercise</Text>
+        <View style={[styles.modalContainer, isDarkMode ? styles.darkModal : styles.lightModal]}>
+          <Text style={[styles.modalTitle, isDarkMode ? styles.darkText : styles.lightText]}>Add Exercise</Text>
 
           <TextInput
             placeholder="Exercise Name"
-            placeholderTextColor="#999"
+            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             value={newExercise.name}
             onChangeText={(text) => setNewExercise({ name: text })}
-            style={styles.modalInput}
+            style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
           />
 
-          <TouchableOpacity onPress={handleAddWorkout} style={styles.modalButton}>
-            <Text style={styles.modalButtonText}>Add Exercise</Text>
+          <TouchableOpacity onPress={handleAddWorkout} style={[styles.modalButton, isDarkMode ? styles.darkButton : styles.lightButton]}>
+            <Text style={[styles.modalButtonText, isDarkMode ? styles.lightText : styles.darkText]}>Add Exercise</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-            <Text style={styles.modalCloseButtonText}>Cancel</Text>
+            <Text style={[styles.modalCloseButtonText, isDarkMode ? styles.darkText : styles.lightText]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
     </Modal>
+
+    {/* history header */}
+    <Text style={[styles.historyHeader, isDarkMode ? styles.darkText : styles.lightText]}>History</Text>
+
+    {/* Display Workout History Dropdowns */}
+          <View style={styles.dropDownContainer}>
+            {exerciseList.map((exercise) => (
+              <View 
+                key={exercise} 
+                style={[
+                  styles.dropdownItem, 
+                  isDarkMode ? styles.darkDropdown : styles.lightDropdown, 
+                  expandedWorkout === exercise && (isDarkMode ? styles.darkExpandedDropdown : styles.lightExpandedDropdown)
+                ]}
+              >
+                <TouchableOpacity onPress={() => toggleDropdown(exercise)} style={styles.dropdownButton}>
+                  <Text style={[styles.exerciseLabel, isDarkMode ? styles.darkText : styles.lightText]}>
+                    {exercise}
+                  </Text>
+                  <Ionicons 
+                    name={expandedWorkout === exercise ? "chevron-up" : "chevron-down"} 
+                    size={20} 
+                    color={isDarkMode ? "#fff" : "#000"} 
+                  />
+                </TouchableOpacity>
+
+                {expandedWorkout === exercise && (
+                  <View style={styles.workoutDetails}>
+                    {workoutHistory[exercise]
+                      ?.sort((a, b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0))
+                      .map((workout, index, arr) => (
+                        <View key={index}>
+                          <Text key={index} style={[styles.dropDownNutrients, isDarkMode ? styles.darkText : styles.lightText]}>
+                            <Text style={{ fontWeight: "bold" }}>Sets:</Text> {workout.sets} {"\n"}
+                            <Text style={{ fontWeight: "bold" }}>Reps:</Text> {workout.reps} {"\n"}
+                            <Text style={{ fontWeight: "bold" }}>Weight:</Text> {workout.weight} lbs {"\n"}
+                            <Text style={{ fontWeight: "bold" }}>Day:</Text> {new Date(workout.date?.toMillis()).toLocaleDateString("en-US")}
+                          </Text>
+                          {/* add a line for dividing the entries in the dropdown */}
+                          {index !== arr.length - 1 && <View style={styles.entryDivider} />}
+                        </View>
+                      ))}
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
   </ScrollView>
   </SafeAreaView>
   </TouchableWithoutFeedback>
@@ -299,14 +339,27 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     padding: 16,
-    backgroundColor: "black",
+  },
+  darkMode: {
+    backgroundColor: "black"
+  },
+  lightMode: {
+    backgroundColor: "white"
+  },
+  innerContainer: {
+    padding: 16
   },
   historyHeader: {
     fontSize: 20,
-    color: "white",
     marginTop: 10,
     marginBottom: 5,
     textAlign: "center"
+  },
+  darkText: {
+    color: "#fff"
+  },
+  lightText: {
+    color: "#000"
   },
   loadingIndicator: {
     marginTop: 20,
@@ -315,20 +368,23 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#333",
+    borderWidth: 2,
     paddingHorizontal: 10,
     paddingVertical: 5
   },
+  darkSearch: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#333"
+  },
+  lightSearch: {
+    backgroundColor: "#FFF",
+    borderColor: "#DDD",
+  },
   input: {
     flex: 1,
-
     marginBottom: 10,
     padding: 10,
-    color: "white",
-    backgroundColor: "#1E1E1E",
     borderRadius: 10,
     borderColor: "#555",
     fontSize: 15,
@@ -343,19 +399,29 @@ const styles = StyleSheet.create({
   searchResultsContainer: {
     maxHeight: 350,
     borderWidth: 2,
-    borderColor: "#BB86FC",
     borderRadius: 20,
     marginTop: 10,
+  },
+  darkSearchResults: {
     backgroundColor: "#1E1E1E",
+    borderColor: "#FFF",
+  },
+  lightSearchResults: {
+    backgroundColor: "#FFF",
+    borderColor: "#000",
   },
   exerciseItem: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
+  },
+  darkExerciseItem: {
+    borderBottomColor: "#FFF"
+  },
+  lightExerciseItem: {
+    borderBottomColor: "#000"
   },
   exerciseName: {
     fontSize: 16,
-    color: "#FFF",
     fontWeight: "bold",
   },
   modalBackground: {
@@ -366,27 +432,39 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "80%",
-    backgroundColor: "#1E1E1E",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
   },
+  darkModal: {
+    backgroundColor: "#1E1E1E",
+  },
+  lightModal: {
+    backgroundColor: "#FFF",
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
     marginBottom: 10,
   },
   modalInput: {
     width: "100%",
-    backgroundColor: "#333",
     padding: 12,
     borderRadius: 5,
-    color: "white",
     marginBottom: 10,
+    borderWidth: 1
+  },
+  darkInput: {
+    backgroundColor: "#333",
+    color: "#FFF",
+    borderColor: "#BBB",
+  },
+  lightInput: {
+    backgroundColor: "#f5f5f5",
+    color: "#000",
+    borderColor: "#DDD",
   },
   modalButton: {
-    backgroundColor: "#BB86FC",
     padding: 12,
     borderRadius: 5,
     width: "100%",
@@ -394,42 +472,45 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   modalButtonText: {
-    color: "#121212",
     fontWeight: "bold",
     fontSize: 16,
   },
   modalCloseButton: {
     marginTop: 10,
+    padding: 10,
+  },
+  darkCloseButton: {
+    color: "white"
   },
   modalCloseButtonText: {
-    color: "white",
     fontSize: 16,
   },
   selectedExerciseContainer: {
     marginTop: 20,
-    backgroundColor: "#1E1E1E",
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#333",
   },
-  
+  darkContainer: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#FFF",
+  },
+  lightContainer: {
+    backgroundColor: "#FFF",
+    borderColor: "#000",
+  },  
   selectedExerciseTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#BB86FC",
     marginBottom: 10,
     textAlign: "center",
   },
-  
   selectedExerciseName: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#FFF",
     marginBottom: 10,
     textAlign: "center",
   },
-  
   formInput: {
     width: "100%",
     backgroundColor: "#333",
@@ -440,9 +521,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#555",
   },
-  
   completeWorkoutButton: {
-    backgroundColor: "#BB86FC",
     padding: 12,
     borderRadius: 15,
     alignItems: "center",
@@ -450,10 +529,59 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 10,
   },
-  
+  darkButton: {
+    backgroundColor: "#FFF",
+  },
+  lightButton: {
+    backgroundColor: "black"
+  },
   completeWorkoutText: {
-    color: "#121212",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  dropDownContainer: {
+    marginTop: 20
+  },
+  dropdownItem: {
+    borderRadius: 8,
+    marginBottom: 10,
+    padding: 10,
+  },
+  darkDropdown: {
+    backgroundColor: "#1E1E1E",
+  },
+  lightDropdown: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderColor: "#DDD",
+  },
+  lightExpandedDropdown: {
+    backgroundColor: "#F5F5F5",
+  },
+  darkExpandedDropdown: {
+    backgroundColor: "#1E1E1E",
+  },
+  dropdownButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  dropDownNutrients: {
+    fontSize: 14,
+    paddingVertical: 2,
+  },
+  exerciseLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  workoutDetails: {
+    marginTop: 5,
+  },
+  entryDivider: {
+    height: 1, 
+    backgroundColor: "#DDD",
+    marginVertical: 8,
+    width: "100%",
+    alignSelf: "center",
   },
 });

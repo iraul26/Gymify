@@ -126,8 +126,9 @@ export default function Register() {
           firstName,
           lastName,
           password: encryptedPassword,
-          profilePicture: "", //default
+          profilePicture: "", //default for new users
           username,
+          theme: "dark" //default for new users
         });
   
         //clear input fields on success
