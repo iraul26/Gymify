@@ -11,12 +11,11 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function ViewProfile() {
   const router = useRouter(); //hook for navigation
-  const { userId } = useUser(); //get user id from the context
+  const { userId, isDarkMode, toggleTheme } = useUser(); //get user id from the context
 
   //state variables
   const [userData, setUserData] = useState<DocumentData | null>(null); //store user data
   const [loading, setLoading] = useState(true); //loading state
-  const [isDarkMode, setIsDarkMode] = useState(true); //theme toggle
   const [profilePicture, setProfilePicture] = useState<string | null>(null); //profile picture url
 
   //runs when user id changes
@@ -178,7 +177,7 @@ export default function ViewProfile() {
       {/* toggle theme */}
       <View style={styles.toggleContainer}>
         <Text style={[styles.toggleText, isDarkMode ? styles.darkText : styles.lightText]}>Toggle Light/Dark Theme</Text>
-        <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
+        <Switch value={isDarkMode} onValueChange={toggleTheme} />
       </View>
     </View>
   );

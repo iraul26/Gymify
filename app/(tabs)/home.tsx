@@ -20,7 +20,7 @@ interface FoodItem {
 
 export default function Home() {
   //state variables
-  const { userId } = useUser(); //get user id from context
+  const { userId, isDarkMode } = useUser(); //get user id from context
 
   const [searchQuery, setSearchQuery] = useState(""); //user input in search bar
   const [results, setResults] = useState<FoodItem[]>([]); //store the search results
@@ -210,7 +210,7 @@ export default function Home() {
   return (
     <>
     {/* modal when user clicks on the add button in search bar */}
-    <ScrollView style={styles.scrollContainer}>
+    <ScrollView style={[styles.scrollContainer, isDarkMode ? styles.darkMode : styles.lightMode]}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -218,22 +218,22 @@ export default function Home() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Add Meal</Text>
+          <View style={[styles.modalContainer, isDarkMode ? styles.darkModal : styles.lightModal]}>
+            <Text style={[styles.modalTitle, isDarkMode? styles.darkText : styles.lightText]}>Add Meal</Text>
 
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
               placeholder="Meal Name"
-              placeholderTextColor="#999"
+              placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
               value={manualMeal.mealName}
               onChangeText={(text) =>
                 setManualMeal({ ...manualMeal, mealName: text })
               }
             />
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
               placeholder="Calories"
-              placeholderTextColor="#999"
+              placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
               keyboardType="numeric"
               value={manualMeal.calories}
               onChangeText={(text) =>
@@ -241,9 +241,9 @@ export default function Home() {
               }
             />
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
               placeholder="Carbs (g)"
-              placeholderTextColor="#999"
+              placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
               keyboardType="numeric"
               value={manualMeal.carbs}
               onChangeText={(text) =>
@@ -251,9 +251,9 @@ export default function Home() {
               }
             />
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
               placeholder="Fats (g)"
-              placeholderTextColor="#999"
+              placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
               keyboardType="numeric"
               value={manualMeal.fats}
               onChangeText={(text) =>
@@ -261,9 +261,9 @@ export default function Home() {
               }
             />
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, isDarkMode ? styles.darkInput : styles.lightInput]}
               placeholder="Protein (g)"
-              placeholderTextColor="#999"
+              placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
               keyboardType="numeric"
               value={manualMeal.protein}
               onChangeText={(text) =>
@@ -273,7 +273,7 @@ export default function Home() {
 
             <TouchableOpacity
               onPress={handleManualMealSubmit}
-              style={styles.modalButton}
+              style={[styles.modalButton, isDarkMode ? styles.darkModalButton : styles.lightModalButton]}
             >
               <Text style={styles.modalButtonText}>Submit</Text>
             </TouchableOpacity>
@@ -282,19 +282,19 @@ export default function Home() {
               onPress={() => setModalVisible(false)}
               style={styles.modalCloseButton}
             >
-              <Text style={styles.modalCloseButtonText}>Cancel</Text>
+              <Text style={[styles.modalCloseButtonText, isDarkMode ? styles.darkText : styles.lightText]}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      <View style={styles.container}>
+      <View style={[styles.container, isDarkMode ? styles.darkMode : styles.lightMode]}>
         {/* search bar */}
-        <View style={styles.searchContainer}>
+        <View style={[styles.searchContainer, isDarkMode ? styles.darkSearch : styles.lightSearch]}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, isDarkMode ? styles.darkText : styles.lightText]}
             placeholder="Search for a food item"
-            placeholderTextColor="#999"
+            placeholderTextColor={isDarkMode ? "#999" : "#666"}
             value={searchQuery}
             onChangeText={setSearchQuery}
             onSubmitEditing={searchFood}
@@ -310,7 +310,7 @@ export default function Home() {
             onPress={() => setModalVisible(true)}
             style={styles.addButton}
           >
-            <Ionicons name="add-circle" size={28} color={"#bb86fc"} />
+            <Ionicons name="add-circle" size={28} color={"green"} />
           </TouchableOpacity>
         </View>
 
@@ -323,7 +323,7 @@ export default function Home() {
           />
         ) : (
           showResults && (
-            <View style={styles.searchResultsContainer}>
+            <View style={[styles.searchResultsContainer, isDarkMode ? styles.darkResults : styles.lightResults]}>
               <FlatList
                 data={results}
                 keyExtractor={(item) => item.fdcId.toString()}
@@ -344,16 +344,16 @@ export default function Home() {
 
                   return (
                     <TouchableOpacity
-                      style={styles.foodItem}
+                      style={[styles.foodItem, isDarkMode ? styles.darkFoodItem : styles.lightFoodItem]}
                       onPress={() => selectFoodItem(item)}
                     >
-                      <Text style={styles.foodName}>{item.description}</Text>
-                      <Text style={styles.nutrients}>
+                      <Text style={[styles.foodName, isDarkMode ? styles.darkText : styles.lightText]}>{item.description}</Text>
+                      <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>
                         Calories: {calories} kcal
                       </Text>
-                      <Text style={styles.nutrients}>Carbs: {carbs} g</Text>
-                      <Text style={styles.nutrients}>Fats: {fats} g</Text>
-                      <Text style={styles.nutrients}>Protein: {protein} g</Text>
+                      <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>Carbs: {carbs} g</Text>
+                      <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>Fats: {fats} g</Text>
+                      <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>Protein: {protein} g</Text>
                     </TouchableOpacity>
                   );
                 }}
@@ -365,26 +365,26 @@ export default function Home() {
 
         {/* display selected food */}
         {selectedFood && (
-          <View style={styles.selectedFoodContainer}>
-            <Text style={styles.foodName}>{selectedFood.description}</Text>
-            <Text style={styles.nutrients}>
+          <View style={[styles.selectedFoodContainer, isDarkMode ? styles.darkFoodContainer : styles.lightFoodContainer]}>
+            <Text style={[styles.foodName, isDarkMode ? styles.darkText : styles.lightText]}>{selectedFood.description}</Text>
+            <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>
               Calories:{" "}
               {selectedFood.foodNutrients.find((n) => n.nutrientId === 1008)
                 ?.value || "N/A"}
             </Text>
-            <Text style={styles.nutrients}>
+            <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>
               Carbs:{" "}
               {selectedFood.foodNutrients.find((n) => n.nutrientId === 1005)
                 ?.value || "N/A"}{" "}
               g
             </Text>
-            <Text style={styles.nutrients}>
+            <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>
               Fats:{" "}
               {selectedFood.foodNutrients.find((n) => n.nutrientId === 1004)
                 ?.value || "N/A"}{" "}
               g
             </Text>
-            <Text style={styles.nutrients}>
+            <Text style={[styles.nutrients, isDarkMode ? styles.darkText : styles.lightText]}>
               Protein:{" "}
               {selectedFood.foodNutrients.find((n) => n.nutrientId === 1003)
                 ?.value || "N/A"}{" "}
@@ -394,10 +394,10 @@ export default function Home() {
             {/* submit button */}
             <TouchableOpacity
               onPress={submitMeal}
-              style={styles.submitButton}
+              style={[styles.submitButton, isDarkMode ? styles.darkSubmitButton : styles.lightSubmitButton]}
               disabled={submitting}
             >
-              <Text style={styles.submitText}>
+              <Text style={[styles.submitText, isDarkMode ? styles.darkSubmitText : styles.lightSubmitText]}>
                 {submitting ? "Submitting..." : "Submit Meal"}
               </Text>
             </TouchableOpacity>
@@ -405,10 +405,10 @@ export default function Home() {
         )}
 
         {/* weekly calorie intake */}
-        <Text style={styles.chartTitle}>Weekly Calorie Intake</Text>
+        <Text style={[styles.chartTitle, isDarkMode ? styles.darkText : styles.lightText]}>Weekly Calorie Intake</Text>
 
         {/* bar graph */}
-        <View style={styles.chartContainer}>
+        <View style={[styles.chartContainer, isDarkMode ? styles.darkChart : styles.lightChart]}>
           <Svg width="100%" height="200">
             {weeklyCalories.map((item, index) => {
               const barHeight = item.calories / 20;
@@ -420,14 +420,14 @@ export default function Home() {
                     y={180 - barHeight}
                     width={30}
                     height={barHeight}
-                    fill="black"
+                    fill={isDarkMode ? "#fff" : "#000"}
                   />
                   {/* calorie label */}
                   <SvgText
                     x={index * 50 + 35}
                     y={175 - barHeight}
                     fontSize="12"
-                    fill="white"
+                    fill={isDarkMode ? "#fff" : "#000"}
                     textAnchor="middle"
                     fontWeight="bold"
                   >
@@ -443,7 +443,7 @@ export default function Home() {
                 x={index * 50 + 35}
                 y={200}
                 fontSize="12"
-                fill="white"
+                fill={isDarkMode ? "#fff" : "#000"}
                 textAnchor="middle"
               >
                 {String(item.day)}
@@ -455,32 +455,32 @@ export default function Home() {
         {/* daily macros dropdown */}
         <View style={styles.dropdownContainer}>
           {Object.keys(dailyMacros).map((day) => (
-            <View key={day} style={styles.dropdownItem}>
+            <View key={day} style={[styles.dropdownItem, isDarkMode ? styles.darkDropdown : styles.lightDropdown, expandedDay === day && (isDarkMode ? styles.darkExpandedDropdown : styles.lightExpandedDropdown)]}>
               <TouchableOpacity
                 onPress={() => toggleDropdown(day)}
                 style={styles.dropdownButton}
               >
-                <Text style={styles.dayLabel}>
+                <Text style={[styles.dayLabel, isDarkMode ? styles.darkText : styles.lightText]}>
                   {day} ({dailyMacros[day]?.formattedDate || "N/A"})
                 </Text>
                 <Ionicons
                   name={expandedDay === day ? "chevron-up" : "chevron-down"}
                   size={20}
-                  color="white"
+                  color={isDarkMode ? "#fff" : "#000"}
                 />
               </TouchableOpacity>
               {expandedDay === day && (
                 <View style={styles.macroDetails}>
-                  <Text style={styles.dropDownNutrients}>
+                  <Text style={[styles.dropDownNutrients, isDarkMode ? styles.darkText : styles.lightText]}>
                     Calories: {dailyMacros[day].calories} cal
                   </Text>
-                  <Text style={styles.dropDownNutrients}>
+                  <Text style={[styles.dropDownNutrients, isDarkMode ? styles.darkText : styles.lightText]}>
                     Carbs: {dailyMacros[day].carbs} g
                   </Text>
-                  <Text style={styles.dropDownNutrients}>
+                  <Text style={[styles.dropDownNutrients, isDarkMode ? styles.darkText : styles.lightText]}>
                     Fats: {dailyMacros[day].fats} g
                   </Text>
-                  <Text style={styles.dropDownNutrients}>
+                  <Text style={[styles.dropDownNutrients, isDarkMode ? styles.darkText : styles.lightText]}>
                     Protein: {dailyMacros[day].protein.toFixed(2)} g
                   </Text>
                 </View>
@@ -498,8 +498,19 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
     padding: 16,
+  },
+  darkMode: {
+    backgroundColor: "black",
+  },
+  lightMode: {
+    backgroundColor: "white",
+  },
+  darkText: {
+    color: "#FFF",
+  },
+  lightText: {
+    color: "#000",
   },
   title: {
     fontSize: 24,
@@ -511,24 +522,36 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
     borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#333",
     marginBottom: 10,
+  },
+  darkSearch: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#333",
+  },
+  lightSearch: {
+    backgroundColor: "#FFF",
+    borderColor: "#DDD",
   },
   searchResultsContainer: {
     maxHeight: 350,
     borderWidth: 2,
-    borderColor: "gray",
     borderRadius: 20,
     marginTop: 5,
-    backgroundColor: "black",
+  },
+  darkResults: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#333",
+  },
+  lightResults: {
+    backgroundColor: "#f5f5f5",
+    borderColor: "black",
   },
   input: {
     flex: 1,
     padding: 12,
-    color: "#FFF",
   },
   clearButton: {
     padding: 10,
@@ -539,7 +562,14 @@ const styles = StyleSheet.create({
   foodItem: {
     padding: 16,
     borderBottomWidth: 1,
+  },
+  darkFoodItem: {
+    backgroundColor: "#1E1E1E",
     borderBottomColor: "#333",
+  },
+  lightFoodItem: {
+    backgroundColor: "#FFF",
+    borderBottomColor: "#CCC",
   },
   foodName: {
     fontSize: 16,
@@ -548,50 +578,86 @@ const styles = StyleSheet.create({
   },
   nutrients: {
     fontSize: 14,
-    color: "#AAA",
   },
   selectedFoodContainer: {
-    backgroundColor: "#1E1E1E",
     padding: 16,
     borderRadius: 8,
     marginBottom: 10,
   },
+  darkFoodContainer: {
+    backgroundColor: "#1E1E1E",
+  },
+  lightFoodContainer: {
+    backgroundColor: "#FFF",
+    borderWidth: 2,
+    borderColor: "#DDD",
+  },
   submitButton: {
-    backgroundColor: "#BB86FC",
     padding: 12,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 10,
   },
+  darkSubmitButton: {
+    backgroundColor: "black",
+  },
+  lightSubmitButton: {
+    backgroundColor: "#bbbbbb",
+  },
   submitText: {
-    color: "#121212",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  darkSubmitText: {
+    color: "white",
+  },
+  lightSubmitText: {
+    color: "black",
   },
   chartTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
     textAlign: "center",
     marginVertical: 10,
   },
   chartContainer: {
     height: 220,
     width: "100%",
-    backgroundColor: "#1E1E1E",
     padding: 10,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 2
+  },
+  darkChart: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#444"
+  },
+  lightChart: {
+    backgroundColor: "#FFF",
+    borderColor: "#ccc"
   },
   dropdownContainer: {
     marginTop: 20,
   },
   dropdownItem: {
-    backgroundColor: "#1E1E1E",
     borderRadius: 8,
     marginBottom: 10,
     padding: 10,
+  },
+  darkDropdown: {
+    backgroundColor: "#1E1E1E"
+  },
+  lightDropdown: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderColor: "#DDD",
+  },
+  lightExpandedDropdown: {
+    backgroundColor: "#f5f5f5",
+  },
+  darkExpandedDropdown: {
+    backgroundColor: "#1e1e1e"
   },
   dropdownButton: {
     flexDirection: "row",
@@ -608,7 +674,6 @@ const styles = StyleSheet.create({
   },
   dropDownNutrients: {
     fontSize: 14,
-    color: "white",
     paddingVertical: 2,
   },
   scrollContainer: {
@@ -627,32 +692,50 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "80%",
-    backgroundColor: "#1E1E1E",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
   },
+  darkModal: {
+    backgroundColor: "#1E1E1E",
+  },
+  lightModal: {
+    backgroundColor: "#FFF",
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
     marginBottom: 10,
   },
   modalInput: {
     width: "100%",
-    backgroundColor: "#333",
     padding: 12,
     borderRadius: 5,
-    color: "white",
+    borderWidth: 1,
     marginBottom: 10,
   },
+  darkInput: {
+    backgroundColor: "#1E1E1E",
+    color: "#FFF",
+    borderColor: "white",
+  },
+  lightInput: {
+    backgroundColor: "#FFF",
+    color: "#000",
+    borderColor: "black",
+  },
   modalButton: {
-    backgroundColor: "#BB86FC",
     padding: 12,
     borderRadius: 5,
     width: "100%",
     alignItems: "center",
     marginTop: 10,
+  },
+  darkModalButton : {
+    backgroundColor: "white",
+  },
+  lightModalButton : {
+    backgroundColor: "#bbbbbb",
   },
   modalButtonText: {
     color: "#121212",
