@@ -121,5 +121,9 @@ Open a pull request.
 
 ---
 
-## Project Presentatiion + Demonstration
-https://youtu.be/eeKtifNtuNQ
+## Project Presentation + Demonstration
+
+[![Watch the video](https://img.youtube.com/vi/eeKtifNtuNQ/hqdefault.jpg)](https://youtu.be/eeKtifNtuNQ)
+
+[![Play Video](https://img.shields.io/badge/▶️%20Click%20to%20Play-%23FF0000?style=for-the-badge)](https://youtu.be/eeKtifNtuNQ)
+
